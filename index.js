@@ -11,14 +11,14 @@ const app = express();
 
 const pageFolder = __dirname.replace("vacsinaserver", "vacsina");
 app.use(express.static(pageFolder));
-app.get('*', function(req, res) {
+app.get('/', function(req, res) {
   // `req` is an instance of Node.js' built-in HTTP request class,
   // with some additional features from Express
   req instanceof require('http').IncomingMessage; // true
   //res.send('id: ' + req.query.id);
   //console.log(req.params.id);
   const arry = req.query.id != undefined ? products.filter(x => {return x.id == req.query.id}) : products;
-  console.log(arry);
+  res.json(arry);
 });
 app.listen(8000);
 
