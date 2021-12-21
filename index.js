@@ -21,7 +21,6 @@ app.post('/editor', function(req, res){
     // correr código aqui depois do ficheiro estar gravado
 
   });
-  res.send(conteudo);
 });
 
 /*app.get('*', function(req, res) {
