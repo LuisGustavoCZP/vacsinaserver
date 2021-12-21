@@ -9,6 +9,8 @@ console.log(products);
 const express = require('express');
 const app = express();
 
+let pageFolder = __dirname.replace("vacsinaserver", "vacsina");
+app.use('/static', express.static(pageFolder);
 app.get('*', function(req, res) {
   // `req` is an instance of Node.js' built-in HTTP request class,
   // with some additional features from Express
@@ -16,16 +18,15 @@ app.get('*', function(req, res) {
   //res.send('id: ' + req.query.id);
   //console.log(req.params.id);
   const arry = req.query.id != undefined ? products.filter(x => {return x.id == req.query.id}) : products;
-  res.json(arry);
+  //res.json(arry);
 });
 app.listen(3000);
 
-var static = require('node-static');
+/*var static = require('node-static');
 var http = require('http');
 
-let pageFolder = __dirname.replace("vacsinaserver", "vacsina");
 var file = new(static.Server)(pageFolder);
 
-  http.createServer(function (req, res) {
+http.createServer(function (req, res) {
   file.serve(req, res);
-}).listen(8000);
+}).listen(8000);*/
