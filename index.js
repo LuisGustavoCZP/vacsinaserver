@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 
 const fs = require('fs');
 
@@ -25,6 +25,6 @@ var http = require('http');
 
 var file = new(static.Server)(__dirname);
 
-http.createServer(function (req, res) {
+  http.createServer(function (req, res) {
   file.serve(req, res);
 }).listen(8000);
