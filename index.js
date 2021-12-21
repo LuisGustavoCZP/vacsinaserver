@@ -14,14 +14,14 @@ app.use(express.static(pageFolder));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.post('/newmap', function(req, res){
+app.post('/editor', function(req, res){
   var conteudo = JSON.stringify(req.body);
   fs.writeFile('nome-do-ficheiro.txt', conteudo, 'utf8', function (err) {
     if (err) throw err;
     // correr código aqui depois do ficheiro estar gravado
 
   });
-  res.json(conteudo);
+  res.send(conteudo);
 });
 
 /*app.get('*', function(req, res) {
