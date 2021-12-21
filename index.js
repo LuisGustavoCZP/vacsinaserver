@@ -10,7 +10,7 @@ const express = require('express');
 const app = express();
 
 let pageFolder = __dirname.replace("vacsinaserver", "vacsina");
-app.use('/static', express.static(pageFolder);
+app.use('/static', express.static(pageFolder));
 app.get('*', function(req, res) {
   // `req` is an instance of Node.js' built-in HTTP request class,
   // with some additional features from Express
