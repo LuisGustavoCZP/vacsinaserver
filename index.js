@@ -23,7 +23,8 @@ app.listen(3000);
 var static = require('node-static');
 var http = require('http');
 
-var file = new(static.Server)(__dirname);
+let pageFolder = __dirname.replace("vacsinaserver", "vacsina");
+var file = new(static.Server)(pageFolder);
 
   http.createServer(function (req, res) {
   file.serve(req, res);
