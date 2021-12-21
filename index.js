@@ -16,7 +16,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('*', function(req, res){
   var conteudo = JSON.stringify(req.body);
-  var fs = require('fs');
   fs.writeFile('nome-do-ficheiro.txt', conteudo, 'utf8', function (err) {
     if (err) throw err;
     // correr código aqui depois do ficheiro estar gravado
