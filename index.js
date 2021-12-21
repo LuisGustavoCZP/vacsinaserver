@@ -18,7 +18,7 @@ app.get('*', function(req, res) {
   //res.send('id: ' + req.query.id);
   //console.log(req.params.id);
   const arry = req.query.id != undefined ? products.filter(x => {return x.id == req.query.id}) : products;
-  //res.json(arry);
+  res.json(arry);
 });
 app.listen(8000);
 
