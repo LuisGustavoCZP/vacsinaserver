@@ -21,6 +21,7 @@ app.post('/newmap', function(req, res){
     // correr código aqui depois do ficheiro estar gravado
 
   });
+  res.json(conteudo);
 });
 
 /*app.get('*', function(req, res) {
