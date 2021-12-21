@@ -9,6 +9,8 @@ const express = require('express');
 const app = express();
 
 const pageFolder = __dirname.replace("vacsinaserver", "vacsina");
+
+app.use(express.static(pageFolder));
 app.get('*', function(req, res) {
   // `req` is an instance of Node.js' built-in HTTP request class,
   // with some additional features from Express
@@ -18,7 +20,7 @@ app.get('*', function(req, res) {
   const arry = req.query.id != undefined ? products.filter(x => {return x.id == req.query.id}) : products;
   res.json(arry);
 });
-app.use(express.static(pageFolder));
+
 app.listen(8000);
 
 /*var static = require('node-static');
