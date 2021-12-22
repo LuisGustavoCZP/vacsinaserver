@@ -34,7 +34,7 @@ app.post('/editor/newmap', function(req, res){
   res.json(arry);
 });*/
 
-app.listen(8000);
+app.listen(8000, "0.0.0.0");
 
 /*var static = require('node-static');
 var http = require('http');
