@@ -15,8 +15,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/editor/newmap', function(req, res){
-  var conteudo = JSON.stringify(req.body);
-  fs.writeFile('nome-do-ficheiro.txt', conteudo, 'utf8', function (err) {
+  var conteudo = JSON.stringify();
+  fs.writeFile('map'+ req.body['input-mapname'] +'.json', conteudo, 'utf8', function (err) {
     if (err) throw err;
   });
   res.redirect('/editor');
