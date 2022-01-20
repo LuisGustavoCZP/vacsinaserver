@@ -1,20 +1,19 @@
 //'use strict';
 
 const fs = require('fs');
-
-let rawdata = fs.readFileSync('produtos.json');
-let products = JSON.parse(rawdata);
-
-const fileupload = require('express-fileupload')
+const fileupload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const express = require('express');
+const { send } = require('express/lib/response');
 const app = express();
 
 const pageFolder = __dirname.replace("vacsinaserver", "vacsina");
 const tilesheetFolder = __dirname+"/tilesheets/";
+const tilesheetImgFolder = __dirname+"/images/";//tilesheets/
 
 app.use(express.static(pageFolder));
-app.use(fileupload(), );
+app.use(express.static(tilesheetImgFolder));
+//app.use(fileupload(), );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -22,11 +21,44 @@ app.post('/editor/newmap', function(req, res){
   let conteudo = JSON.stringify(req.body);
   conteudo = conteudo.replace(/input-/g, "");
   const mapfile = JSON.parse(conteudo);
+  mapfile.tiles = [];
+  for(let i = 0; i < mapfile.size; i++)
+  {
+    for(let j = 0; j < mapfile.size; j++)
+    {
+      mapfile.tiles.push({"x":j, "y":i, "type":0});
+    }
+  }
+  //console.log(mapfile);
+  conteudo = JSON.stringify(mapfile);
   const tp = 'map'+ mapfile['mapname'] +'.json';
   fs.writeFile('maps/'+tp, conteudo, 'utf8', function (err) {
     if (err) throw err;
   });
   res.redirect('/editor?input-tilemap='+tp);
+});
+
+app.post('/editor/modmap', function(req, res){
+  
+  const conteudo = req.body;
+  const tp = 'map'+ conteudo['mapname'] +'.json';
+  
+  const mapfile = JSON.parse(fs.readFileSync(__dirname+"/maps/"+tp));
+  mapfile.tiles = conteudo.tiles;
+  /* for(let i = 0; i < conteudo.tiles.lenght; i++)
+  {
+    const n = conteudo.tiles[i];
+    //const id = n.x + (n.y*(Math.sqrt(tiles.lenght)));
+    mapfile.tiles[i] = n;
+  } */
+  //console.log(mapfile);
+  let infodata = JSON.stringify(mapfile);
+  console.log(mapfile.mapname);
+
+  fs.writeFile('maps/'+tp, infodata, 'utf8', function (err) {
+    if (err) throw err;
+  });
+  res.send("true");
 });
 
 app.get('/tilemaps', function(req, res){
@@ -43,44 +75,29 @@ app.post('/editor/loadmap', function(req, res){
   else res.send("Empty");
 });
 
-app.post('/editor/newtilesheet', function(req, res){
-  let conteudo = JSON.stringify(req.body);
-  conteudo = conteudo.replace(/input-/g, "");
-  const tsfile = JSON.parse(conteudo);
-  tsfile.tiles = [];
+app.post('/editor/newtilesheet', function(req, res)
+{
+  const conteudo = req.body;
 
-  const ispace = tsfile.space;
-  const nw = tsfile.pixels + ispace;
-  if (tsfile.src.length > 0) {
-    var fileReader = new FileReader();
+  const tsfile = conteudo.file;
+  if (tsfile) 
+  {
+    const data = tsfile.replace(/^data:image\/\w+;base64,/, "");
+    const buf = Buffer.from(data, 'base64');
+    const srcPth = tilesheetImgFolder+conteudo.data.name+".png";
 
-    fileReader.onload = (event) => 
-    {
-      console.log(tsfile.src);
-      const img = event.target.result;
-      const maxColum = Math.ceil((img.width + ispace) / (nw));
-      const maxRow = Math.ceil((img.height + ispace) / (nw));
+    fs.writeFile(srcPth, buf, function (err) {
+      if (err) throw err;
+      console.log("Success saved: " + srcPth);
+    });
     
-      console.log(tsfile.pixels + " (" + maxColum+","+ maxRow +")");
-    
-      for(let i = 0; i < maxColum; i++){
-        for(let j = 0; j < maxColum; j++){
-          const id = i+(j*maxColum);
-          tsfile.tiles.push({id:id, block:false});
-        }
-      }
-    
-      conteudo = JSON.stringify(tsfile);
-      const tp = 'tilesheet'+ tsfile['name'] +'.json';
-      fs.writeFile(tilesheetFolder+tp, conteudo, 'utf8', function (err) {
-        if (err) throw err;
-      });
-      res.redirect('/editor');
-    };
-
-    fileReader.readAsDataURL(tsfile.src);
+    conteudo.data.src = srcPth;
+    fs.writeFile(tilesheetFolder+conteudo.data.name+".json", JSON.stringify(conteudo.data), 'utf8', function (err) {
+      if (err) throw err;
+      console.log("Success saved: " + conteudo.data.name);
+    });
   }
-
+  res.send(true);
 });
 
 app.get('/tilesheets', function(req, res){
@@ -93,7 +110,7 @@ app.post('/editor/loadtilesheet', function(req, res){
   console.log(conteudo);
   const mapfile = fs.readFileSync(tilesheetFolder+conteudo);
   if(conteudo != undefined) res.send(mapfile);
-  else res.send("Empty");
+  else res.send("{}");
 });
 
 app.post('/saveImage', (req, res) => {
