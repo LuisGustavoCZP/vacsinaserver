@@ -34,15 +34,22 @@ module.exports = function Routes (app, rootPath, ...modules)
         res.send(conteudo);
     });
 
-    app.post('/editor/loadtilesheet', function(req, res){
-        let conteudo = req.body['name'];
+    app.get('/tilesheets/:file', function(req, res){
+        const filename = req.params["file"];
+        const conteudo = fs.readFileSync(`${tilesheetImgFolder}tilesheets/${filename}`);
+        if(conteudo != undefined) res.send(conteudo);
+        else res.send("{}");
+    });
+
+    app.get('/editor/loadtilesheet', function(req, res){
+        let conteudo = req.query['name'];
         console.log(conteudo);
         const mapfile = fs.readFileSync(tilesheetFolder+conteudo);
         if(conteudo != undefined) res.send(mapfile);
         else res.send("{}");
-        });
+    });
 
-        app.post('/saveImage', (req, res) => {
+    app.post('/saveImage', (req, res) => {
         const fileName = req.files.myFile.name
         const path = rootPath + '/images/' + fileName
 
@@ -57,9 +64,10 @@ module.exports = function Routes (app, rootPath, ...modules)
             }
 
             res.writeHead(200, {
-            'Content-Type': 'application/json'
-            })
-            res.end(JSON.stringify({ status: 'success', path: '/img/houses/' + fileName }))
+                'Content-Type': 'application/json'
+            });
+
+            res.end(JSON.stringify({ status: 'success', path: '/img/houses/' + fileName }));
         })
     });
 }

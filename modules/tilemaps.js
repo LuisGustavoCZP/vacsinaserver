@@ -44,8 +44,8 @@ module.exports = function Routes (app, rootPath, ...modules)
         res.send(conteudo);
     });
     
-    app.post('/editor/loadmap', function(req, res){
-        let conteudo = req.body['name'];
+    app.get('/editor/loadmap', function(req, res){
+        let conteudo = req.query['name'];
         console.log(conteudo);
         const mapfile = fs.readFileSync(rootPath+"/maps/"+conteudo);
         if(conteudo != undefined) res.send(mapfile);

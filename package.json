@@ -1,17 +1,19 @@
 {
-  "name": "projteste",
+  "name": "vacsina",
   "version": "1.0.0",
-  "description": "teste pro kenji",
+  "description": "Jogo Web/Unity para ressaltar a importancia da vacina",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "luis gustavo czp",
+  "author": "Luis Gustavo C. Z. Pereira",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "express": "^4.17.2",
     "express-fileupload": "^1.2.1",
-    "node-static": "^0.7.11"
+    "pg": "^8.7.3"
   }
 }
