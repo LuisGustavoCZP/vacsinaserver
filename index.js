@@ -34,7 +34,7 @@ app.post("/login", users.login);
 app.get("/test", users.verify, (req, res) => 
 {
     console.log(req.userid);
-    res.json({userid:req.userid});
+    res.json({userid:req.userid, "nome da criança": crypto.randomUUID()});
 });
 
 Tilemap(app, rootPath, fs);
